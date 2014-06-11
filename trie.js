@@ -50,12 +50,42 @@ Trie.prototype.find = function(word, index) {
     // which corresponds to the end of the passed in word.
 
     // Be sure to consider what happens if the word is not in this Trie.
+
+    // if character is less than the word length, find the rest of the characters
+    // if index = word.length, you've reached the end of the word
+    // if word is not in this trie, return undefined
+    index = index || 0;
+    var char = word[index];
+    if (this.characters[char]) {
+        return this.characters[char].find(word, index + 1);
+    } else if (index === word.length) {
+        return this;
+    } else {
+        return false;
+    }
 };
 
 Trie.prototype.autoComplete = function(prefix) {
     // This function will return all completions 
     // for a given prefix.
     // It should use find and getWords.
+
+    //find the given prefix
+    //return all words for that prefix
+    prefix = prefix || "";
+
+    var prefixNode = this.find(prefix);
+    //if prefix is found, return all results of words for the given prefix
+    //if it is not found, return sorry not found
+    if (prefixNode !== false) {
+        results = prefixNode.getWords()
+        for (var i = 0; i < results.length; i++) {
+            results[i] = prefix + results[i];
+        }
+        return results;
+    } else {
+        return [];
+    }
 };
 
 try {
